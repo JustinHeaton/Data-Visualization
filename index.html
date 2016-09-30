@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dimple/2.2.0/dimple.latest.js"></script>
+
+    <style>
+      circle.dimple-custom-series-bubble {
+        fill: darkorange;
+        opacity: .8;
+
+      }
+      h2 {
+        text-align: left;
+        padding-left: 70px;
+        padding-top: 5px;
+
+      }
+      h3 {
+        text-align: left;
+        padding-left: 220px;
+      }
+      text {
+        font-size: 14px;
+      }
+    </style>
+
+    <script type="text/javascript">
+
+      function draw(data) {
+
+      /*
+        D3.js setup code
+      */
+
+          "use strict";
+          var margin = 75,
+              width = 1400 ,
+              height = 600 ;
+
+          d3.select('body')
+            .append('h2')
+            .text("Defensive Performance for Players Receiving NBA Defensive Player of the Year Votes in 2015");
+
+          d3.select('body')
+            .append('h3')
+            .text("Size of bubble represents average points per shot against each player");
+
+          var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width + margin)
+              .attr("height", height + margin)
+
+            .append('g')
+              .style("font-size","34px")
+              .attr('class','chart');
+
+
+      /*
+        Dimple.js Chart construction code
+      */
+
+
+          var myChart = new dimple.chart(svg, data);
+          myChart.setBounds(95, 10, 800, 350)
+          var x = myChart.addCategoryAxis("x", "Closest Defender");
+          x.title = "Player (DPOY votes most to least)"
+          x.fontSize = "12";
+          x.addOrderRule("Rank")
+          var y = myChart.addMeasureAxis("y", "Percent Made");
+          y.tickFormat = ',.2f';
+          y.overrideMin = 0.30;
+          y.title = "Opponents Field Goal Percentage Against Player"
+          y.fontSize = "12";
+          var z = myChart.addMeasureAxis("z", "PTS");
+          z.tickFormat = ',.2f';
+          myChart.addSeries(null, dimple.plot.bubble);
+          myChart.draw();
+        };
+      </script>
+  </head>
+<body>
+  <script type="text/javascript">
+  /*
+    Use D3 (not dimple.js) to load the TSV file
+    and pass the contents of it to the draw function
+    */
+  d3.csv("group.csv", draw);
+  </script>
+</body>
+</html>
